@@ -7,23 +7,106 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class User(Base):
+    __tablename__ = 'user'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+    last_name = Column(String(250))
+    email = Column(String(250))
+    password = Column(String(250))
+    created = Column(String(250))
+    planet = relationship('FavoritosUser', backref='user', lazy=True)  #PREGUNTAR A ROSINI SI EL MAYUSCULA MINUSCULA AQUI ES IMPORTANTE O NO
+
+
+class Planet(Base):
+    __tablename__ = 'planet'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+    climate = Column(String(250))
+    diameter = Column(Integer)
+    gravity = Column(Integer)
+    favoritos = relationship('FavoritosPlanet', backref='planet', lazy=True)
+
+
+
+class Character(Base):
+    __tablename__ = 'character'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    birth_year = Column(String(250))
+    eye_color = Column(String(250))
+    gender = Column(String(250))
+    favoritos = relationship('FavoritosCharacters', backref='character', lazy=True)
 
-class Address(Base):
-    __tablename__ = 'address'
+
+
+class Vehicle(Base):
+    __tablename__ = 'vehicle'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    model = Column(String(250), nullable=False)
+    passenger = Column(Integer)
+    length = Column(Integer)
+    favoritos = relationship('FavoritosVehicle', backref='vehicle', lazy=True)
+
+
+
+# class Favoritos(Base):
+#     __tablename__ = 'favoritos'
+#     # Here we define columns for the table address.
+#     # Notice that each column is also a normal Python instance attribute.
+#     id = Column(Integer, primary_key=True)
+#     # street_name = Column(String(250))
+#     # street_number = Column(String(250))
+#     # post_code = Column(String(250), nullable=False)
+#     user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+#     character_id = Column(Integer, ForeignKey('character.id'))
+#     planet_id = Column(Integer, ForeignKey('planet.id'))
+#     vehicle_id = Column(Integer, ForeignKey('vehicle.id'))
+#     user = relationship(User)
+#     # character = relationship(Character)
+#     # planet = relationship(Planet)
+#     # vehicle = relationship(Vehicle)
+
+
+class FavoritosPlanet(Base):
+    __tablename__ = 'favoritos_planet'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+    planet_id = Column(Integer, ForeignKey('planet.id'))
+
+
+class FavoritosVehicle(Base):
+    __tablename__ = 'favoritos_vehicle'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+    vehicle_id = Column(Integer, ForeignKey('vehicle.id'))
+
+class FavoritosCharacter(Base):
+    __tablename__ = 'favoritos_character'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+    character_id = Column(Integer, ForeignKey('character.id'))
+    #planet_id = Column(Integer, ForeignKey('planet.id'))
+    # vehicle_id = Column(Integer, ForeignKey('vehicle.id'))
+    # user = relationship(User)
+    # character = relationship(Character)
+    # planet = relationship(Planet)
+    # vehicle = relationship(Vehicle)
 
     def to_dict(self):
         return {}
